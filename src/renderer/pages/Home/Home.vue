@@ -56,7 +56,7 @@
             <span class="word-sum">字数：{{wordSize}}</span>
           </div>
           <div class="markdown-view">
-            <mavon-editor style="height: 100%" v-model="value"/>
+            <mavon-editor style="height:100%" v-model = 'value' :ishljs="true" @htmlCode="htmlCode" @save="save"/>
           </div>
         </div>
       </el-main>
@@ -70,6 +70,14 @@ export default {
       is_menu: true,
       isCollapse: true,
       wordSize: 0
+    }
+  },
+  methods: {
+    htmlCode (res) {
+      console.log(res)
+    },
+    save (res) {
+      console.log(res)
     }
   }
 }
