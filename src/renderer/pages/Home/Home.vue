@@ -63,6 +63,8 @@
     </el-container>
 </template>
 <script>
+var markdownpdf = require('markdown-pdf')
+var fs = require('fs')
 export default {
   name: 'Home',
   data () {
@@ -76,8 +78,23 @@ export default {
     htmlCode (res) {
       console.log(res)
     },
+    writeFile (path, text) {
+      fs.writeFile(path, text, function (err) {
+        if (err) {
+          throw err
+        }
+        console.log('Saved md.')
+      })
+    },
     save (res) {
-      console.log(res)
+      console.log(typeof (res))
+      fs.writeFile('/Users/houyujiang/Documents/markdown-editor/test.md', res, function (err) {
+        if (err) {
+          throw err
+        }
+        console.log('Saved md.')
+      })
+      fs.createReadStream('/Users/houyujiang/Documents/markdown-editor/test.md').pipe(markdownpdf()).pipe(fs.createWriteStream('/Users/houyujiang/Documents/markdown-editor/test.pdf'))
     }
   }
 }
