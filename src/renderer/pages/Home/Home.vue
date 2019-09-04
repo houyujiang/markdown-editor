@@ -22,9 +22,9 @@
             <i class="el-icon-view"></i>
             <span slot="title">预览文档</span>
           </el-menu-item>
-          <el-menu-item index="5">
-            <i class="el-icon-download"></i>
-            <span slot="title">导出文档</span>
+          <el-menu-item index="5" @to-pdf="toPdf">
+            <i class="el-icon-download" @click="toPdf"></i>
+            <span slot="title" >导出文档</span>
           </el-menu-item>
           <el-menu-item index="7">
             <i class="el-icon-document"></i>
@@ -56,7 +56,7 @@
             <span class="word-sum">字数：{{wordSize}}</span>
           </div>
           <div class="markdown-view">
-            <mavon-editor style="height:100%" v-model = 'value' :ishljs="true" @htmlCode="htmlCode" @save="save"/>
+            <mavon-editor style="height:100%" ref=md v-model='value' :ishljs="true" @htmlCode="htmlCode" @save="save"/>
           </div>
         </div>
       </el-main>
@@ -71,7 +71,14 @@ export default {
     return {
       is_menu: true,
       isCollapse: true,
+      value: '',
       wordSize: 0
+    }
+  },
+  watch: {
+    value: function (res) {
+      console.log(this.$refs.md.d_value)
+      this.wordSize = this.$refs.md.d_value.length
     }
   },
   methods: {
@@ -88,13 +95,18 @@ export default {
     },
     save (res) {
       console.log(typeof (res))
+      console.log(this.$refs.md.d_render)
       fs.writeFile('/Users/houyujiang/Documents/markdown-editor/test.md', res, function (err) {
         if (err) {
           throw err
         }
-        console.log('Saved md.')
       })
-      fs.createReadStream('/Users/houyujiang/Documents/markdown-editor/test.md').pipe(markdownpdf()).pipe(fs.createWriteStream('/Users/houyujiang/Documents/markdown-editor/test.pdf'))
+    },
+    toPdf () {
+      fs.createReadStream('/Users/houyujiang/Documents/markdown-editor/test.md')
+        .pipe(markdownpdf())
+        .pipe(fs.createWriteStream('/Users/houyujiang/Documents/markdown-editor/test.pdf'))
+      console.log('Saved pdf.')
     }
   }
 }
